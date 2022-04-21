@@ -9,6 +9,10 @@ const csvFile = './data/sampleData.csv'
 const stylesheet = '../style.css';
 
 const run = async () => {
+  if(!fs.existsSync('./output')){
+    fs.mkdirSync('./output');
+  }
+
   let data = await convert(csvFile);
   let { priceList, sumList, titleList } = data;
   let { epList, gpList } = priceList;
