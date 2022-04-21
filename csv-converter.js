@@ -2,20 +2,25 @@ const csv = require('csv-parser')
 const fs = require('fs')
 const { cleanUpData, preprocess, toString } = require('./helper.js')
 
+const titlesFile = './data/sampleTitles.csv';
+const outputJSFile = './output/data.js'
+
 const convert = async (file) => {
   const data = await getData(file)
   const priceList = await getPrices(data)
   const sumList = await getSums(data)
-  const titleList = await getTitles('./data/titel.csv')
+  const titleList = await getTitles(titlesFile)
 
-  saveAsJson({priceList, sumList, titleList})
+  saveAsJson({ priceList, sumList, titleList })
+
+  return { priceList, sumList, titleList }
 }
 
 const getData = (file) => new Promise((resolve, reject) => {
   let result = []
 
   fs.createReadStream(file)
-    .pipe(csv({separator: ';'}))
+    .pipe(csv({ separator: ';' }))
     .on('data', (data) => result.push(cleanUpData(data)))
     .on('end', () => resolve(result))
     .on('error', (error) => reject(error))
@@ -30,9 +35,9 @@ const getPrices = (data) => new Promise((resolve, reject) => {
     gpList.push(el.gp)
   })
 
-  // filter missing G-Preise
+  // filter missing prices
   gpList = gpList.filter(el => el != 'EP.')
-  resolve({epList, gpList})
+  resolve({ epList, gpList })
 })
 
 const getSums = (data) => new Promise((resolve, reject) => {
@@ -41,13 +46,13 @@ const getSums = (data) => new Promise((resolve, reject) => {
   let index = 3 // index of relevant position number
   let sum = filtered[0].gp
 
-  for(i = 1; i < filtered.length; i++){
-    if(filtered[i].position[index] === filtered[i-1].position[index]){
+  for (i = 1; i < filtered.length; i++) {
+    if (filtered[i].position[index] === filtered[i - 1].position[index]) {
       sum += filtered[i].gp
     } else {
-        sum = Math.round((sum + Number.EPSILON) * 100) / 100
-        sumList.push(sum)
-        sum = filtered[i].gp
+      sum = Math.round((sum + Number.EPSILON) * 100) / 100
+      sumList.push(sum)
+      sum = filtered[i].gp
     }
   }
   sumList.push(sum)
@@ -60,7 +65,7 @@ const getSums = (data) => new Promise((resolve, reject) => {
 })
 
 const saveAsJson = (data) => {
-  fs.writeFile('./data/data.js', `var data = ${JSON.stringify(data)}`, function (err) {
+  fs.writeFile(outputJSFile, `var data = ${JSON.stringify(data)}`, function (err) {
     if (err) throw err
     console.log('Saved!')
   })
@@ -70,10 +75,10 @@ const getTitles = (file) => new Promise((resolve, reject) => {
   let result = []
 
   fs.createReadStream(file)
-    .pipe(csv({separator: ';'}))
+    .pipe(csv({ separator: ';' }))
     .on('data', (data) => result.push(data.Beschreibung))
     .on('end', () => resolve(result))
     .on('error', (error) => reject(error))
 })
 
-convert('./data/data.csv')
+module.exports = { convert }

@@ -1,1 +1,7 @@
 node_modules
+data/data.csv
+data/data.js
+data/Infra.csv
+data/pdf.html
+data/titles.csv
+output/*
