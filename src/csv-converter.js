@@ -3,7 +3,7 @@ const fs = require('fs')
 const { cleanUpData, preprocess, toString } = require('./helper.js')
 
 const titlesFile = './data/sampleTitles.csv';
-const outputJSFile = './output/data.js'
+//const outputJSFile = './output/data.js'
 
 const convert = async (file) => {
   const data = await getData(file)
@@ -11,7 +11,7 @@ const convert = async (file) => {
   const sumList = await getSums(data)
   const titleList = await getTitles(titlesFile)
 
-  saveAsJson({ priceList, sumList, titleList })
+  //saveAsJson({ priceList, sumList, titleList })
 
   return { priceList, sumList, titleList }
 }
@@ -64,12 +64,12 @@ const getSums = (data) => new Promise((resolve, reject) => {
   resolve(sumList)
 })
 
-const saveAsJson = (data) => {
+/* const saveAsJson = (data) => {
   fs.writeFile(outputJSFile, `var data = ${JSON.stringify(data)}`, function (err) {
     if (err) throw err
     console.log('Saved!')
   })
-}
+} */
 
 const getTitles = (file) => new Promise((resolve, reject) => {
   let result = []
