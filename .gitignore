@@ -4,4 +4,5 @@ data/data.js
 data/Infra.csv
 data/pdf.html
 data/titles.csv
-output/*
+output/pdf.html
+output/data.js

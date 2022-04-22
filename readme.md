@@ -9,8 +9,6 @@ While working at the office of my family's business, I realized that a lot of ti
 ## The Solution
 As a solution, this program processes an exported csv data-set from Taifun and inserts it into the customer template. To provide a bit more flexibility and help in dealing with the varying PDF layouts, the program reads in an HTML converted version of the document. (For quick and easy conversion I used [pdf2htmlEX](https://github.com/pdf2htmlEX/pdf2htmlEX)). After preparing the data and parsing the HTML file, it inserts the prices to the correct positions via DOM manipulation and saves the filled out document as a new file.  
 
-<br>
-
 ## Installation And Usage
 The repository comes with sample data to quickly try out the program:
 
